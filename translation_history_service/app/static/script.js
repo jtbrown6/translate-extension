@@ -134,14 +134,19 @@ function renderTranslations() {
             const toLang = translation.language?.to || 'Unknown';
             
             html += `
-                <div class="translation-card">
+                <div class="translation-card" data-id="${translation.timestamp}">
                     <div class="translation-header">
                         <div class="translation-direction">
                             <span>${fromLang}</span>
                             <i class="fas fa-arrow-right"></i>
                             <span>${toLang}</span>
                         </div>
-                        <div class="translation-date">${formattedDate}</div>
+                        <div class="translation-actions">
+                            <span class="translation-date">${formattedDate}</span>
+                            <button class="delete-btn" title="Delete translation">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
                     </div>
                     <div class="translation-content">
                         <div class="translation-text">
@@ -177,6 +182,39 @@ function renderTranslations() {
             } else {
                 weekTranslations.style.display = 'none';
                 header.classList.add('collapsed');
+            }
+        });
+    });
+    
+    // Add event listeners to delete buttons
+    document.querySelectorAll('.delete-btn').forEach(button => {
+        button.addEventListener('click', async (e) => {
+            e.stopPropagation(); // Prevent event bubbling
+            
+            const card = button.closest('.translation-card');
+            const translationId = card.dataset.id;
+            
+            if (confirm('Are you sure you want to delete this translation?')) {
+                try {
+                    const response = await fetch(`/api/translations/${translationId}`, {
+                        method: 'DELETE'
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`API request failed with status ${response.status}`);
+                    }
+                    
+                    // Remove the translation from the array
+                    translations = translations.filter(t => t.timestamp !== translationId);
+                    
+                    // Re-render and update stats
+                    filterAndRenderTranslations();
+                    updateStats();
+                    
+                } catch (error) {
+                    console.error('Error deleting translation:', error);
+                    alert(`Error deleting translation: ${error.message}`);
+                }
             }
         });
     });

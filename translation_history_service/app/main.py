@@ -98,6 +98,25 @@ async def add_translation(translation: Translation):
     return {"status": "success", "message": "Translation added successfully"}
 
 
+@app.delete("/api/translations/{translation_id}")
+async def delete_translation(translation_id: str):
+    """Delete a specific translation by its ID (timestamp)."""
+    translations = read_translations()
+    
+    # Find the translation with the matching ID (timestamp)
+    original_length = len(translations)
+    translations = [t for t in translations if t.get("timestamp") != translation_id]
+    
+    # If no translation was removed, return 404
+    if len(translations) == original_length:
+        raise HTTPException(status_code=404, detail="Translation not found")
+    
+    # Write the updated list back to the file
+    write_translations(translations)
+    
+    return {"status": "success", "message": "Translation deleted successfully"}
+
+
 @app.delete("/api/translations")
 async def delete_all_translations():
     """Delete all translations."""

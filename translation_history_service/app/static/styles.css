@@ -220,6 +220,28 @@ main {
     gap: 5px;
 }
 
+.translation-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.delete-btn {
+    background: none;
+    border: none;
+    color: var(--dark-gray);
+    cursor: pointer;
+    padding: 2px 5px;
+    font-size: 14px;
+    opacity: 0.6;
+    transition: var(--transition);
+}
+
+.delete-btn:hover {
+    color: var(--danger-color);
+    opacity: 1;
+}
+
 .translation-content {
     display: grid;
     grid-template-columns: 1fr 1fr;

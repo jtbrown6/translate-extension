@@ -56,7 +56,7 @@ This project consists of two main components:
 - Sort translations by date (newest or oldest first)
 - Filter translations by time period (today, this week, this month, all time)
 - View statistics about your translations
-- Clear translation history
+- Delete individual translations or clear all history
 
 ### Technology Stack
 

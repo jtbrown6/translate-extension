@@ -1,5 +1,5 @@
 // API key for Google Gemini
-const API_KEY = '';
+const API_KEY = 'AIzaSyDI1B0hccwMnILw8cSFdSARoNePObHReDk';
 const API_URL = 'https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent';
 
 // Variables to store DOM elements

@@ -39,6 +39,7 @@ translation_history_service/
 
 - `GET /api/translations`: Get all translations
 - `POST /api/translations`: Add a new translation
+- `DELETE /api/translations/{translation_id}`: Delete a specific translation by its ID (timestamp)
 - `DELETE /api/translations`: Delete all translations
 
 ## Setup and Deployment

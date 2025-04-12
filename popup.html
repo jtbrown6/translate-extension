@@ -13,12 +13,14 @@
     <div class="translation-box">
       <textarea id="outputText" placeholder="Translation will appear here..." rows="4" readonly></textarea>
     </div>
-    <div class="actions">
-      <button id="saveButton" class="save-btn">Save Translation</button>
-    </div>
     <div class="footer">
-      <p class="info">English ↔ Spanish</p>
-      <p class="view-history"><a href="http://192.168.1.214:3005" target="_blank">View History</a></p>
+      <div class="footer-left">
+        <p class="info">English ↔ Spanish</p>
+      </div>
+      <div class="footer-right">
+        <button id="saveButton" class="save-btn">Save</button>
+        <a href="http://192.168.1.214:3005" target="_blank" class="history-link">History</a>
+      </div>
     </div>
   </div>
   <script src="popup.js"></script>
