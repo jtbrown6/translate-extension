@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Generate Icon for Quick Translator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    canvas {
+      border: 1px solid #ddd;
+      margin: 20px 0;
+    }
+    .instructions {
+      background-color: #f5f5f5;
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 20px;
+    }
+    button {
+      padding: 10px 15px;
+      background-color: #4285F4;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #3367D6;
+    }
+    #dataUrl {
+      word-break: break-all;
+      background-color: #f5f5f5;
+      padding: 10px;
+      border-radius: 4px;
+      margin-top: 10px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>Icon Generator for Quick Translator</h1>
+  
+  <div class="instructions">
+    <h2>Instructions:</h2>
+    <ol>
+      <li>Click the "Generate Icon" button below</li>
+      <li>Right-click on the canvas and select "Save image as..."</li>
+      <li>Save it as "icon.png" in your extension folder</li>
+    </ol>
+  </div>
+  
+  <canvas id="iconCanvas" width="128" height="128"></canvas>
+  <br>
+  <button id="generateBtn">Generate Icon</button>
+  
+  <script>
+    document.getElementById('generateBtn').addEventListener('click', function() {
+      const canvas = document.getElementById('iconCanvas');
+      const ctx = canvas.getContext('2d');
+      const size = 128;
+      
+      // Clear canvas
+      ctx.clearRect(0, 0, size, size);
+      
+      // Background
+      ctx.fillStyle = '#4285F4'; // Google blue
+      ctx.fillRect(0, 0, size, size);
+      
+      // Border
+      ctx.strokeStyle = '#FFFFFF';
+      ctx.lineWidth = Math.max(1, size / 16);
+      ctx.strokeRect(0, 0, size, size);
+      
+      // "T" letter for translator
+      ctx.fillStyle = '#FFFFFF';
+      
+      // Horizontal bar of T
+      ctx.fillRect(size * 0.2, size * 0.2, size * 0.6, size * 0.15);
+      
+      // Vertical bar of T
+      ctx.fillRect(size * 0.4, size * 0.2, size * 0.2, size * 0.6);
+      
+      // Draw a small arrow at the bottom
+      ctx.beginPath();
+      ctx.moveTo(size * 0.3, size * 0.75);
+      ctx.lineTo(size * 0.5, size * 0.85);
+      ctx.lineTo(size * 0.7, size * 0.75);
+      ctx.fill();
+      
+      alert('Icon generated! Right-click on the image and select "Save image as..." to save it as icon.png');
+    });
+  </script>
+</body>
+</html>

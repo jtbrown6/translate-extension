@@ -1,0 +1,200 @@
+// API key for Google Gemini
+const API_KEY = 'AIzaSyDI1B0hccwMnILw8cSFdSARoNePObHReDk';
+const API_URL = 'https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent';
+
+// Variables to store DOM elements
+let inputText;
+let outputText;
+
+// Debounce function to limit API calls
+function debounce(func, timeout = 500) {
+  let timer;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => { func.apply(this, args); }, timeout);
+  };
+}
+
+// Function to translate text using Gemini API
+async function translateText(text) {
+  if (!text.trim()) {
+    outputText.value = '';
+    return;
+  }
+
+  try {
+    // Show loading state
+    outputText.value = 'Translating...';
+    
+    console.log('Sending translation request for:', text);
+    
+    // Prepare the request to Gemini API
+    const requestBody = {
+      contents: [{
+        parts: [{
+          text: `Detect if the following text is English or Spanish. If it's English, translate it to Spanish. If it's Spanish, translate it to English. Only return the translated text, nothing else.
+
+Text: "${text}"`
+        }]
+      }]
+    };
+    
+    console.log('Request body:', JSON.stringify(requestBody));
+    
+    const response = await fetch(`${API_URL}?key=${API_KEY}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestBody)
+    });
+    
+    console.log('Response status:', response.status);
+    
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('API error response:', errorText);
+      throw new Error(`API request failed with status ${response.status}: ${errorText}`);
+    }
+
+    const data = await response.json();
+    console.log('API response data:', JSON.stringify(data));
+    
+    // Check if the response contains the expected data
+    if (data.candidates && data.candidates[0] && data.candidates[0].content && 
+        data.candidates[0].content.parts && data.candidates[0].content.parts[0]) {
+      const translatedText = data.candidates[0].content.parts[0].text;
+      console.log('Translated text:', translatedText);
+      outputText.value = translatedText;
+    } else {
+      console.error('Unexpected API response format:', data);
+      throw new Error('Unexpected API response format');
+    }
+  } catch (error) {
+    console.error('Translation error:', error);
+    outputText.value = 'Error: Could not translate text. Please try again.';
+  }
+}
+
+// Debounced translation function to avoid too many API calls
+const debouncedTranslate = debounce((text) => {
+  translateText(text);
+});
+
+// Backend service URL
+const HISTORY_SERVICE_URL = 'http://192.168.1.214:3005/api/translations';
+
+// Function to save translation to the history service
+async function saveTranslation(original, translated) {
+  try {
+    const saveButton = document.getElementById('saveButton');
+    
+    // Disable button and show saving state
+    saveButton.disabled = true;
+    saveButton.textContent = 'Saving...';
+    
+    const response = await fetch(HISTORY_SERVICE_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        original: original,
+        translated: translated,
+        timestamp: new Date().toISOString(),
+        language: {
+          from: detectLanguage(original),
+          to: detectLanguage(translated)
+        }
+      })
+    });
+    
+    if (!response.ok) {
+      throw new Error(`Failed to save translation: ${response.status}`);
+    }
+    
+    // Show success state
+    saveButton.textContent = 'Saved!';
+    saveButton.classList.add('saved');
+    
+    // Reset button after 2 seconds
+    setTimeout(() => {
+      saveButton.textContent = 'Save Translation';
+      saveButton.disabled = false;
+      saveButton.classList.remove('saved');
+    }, 2000);
+    
+    console.log('Translation saved successfully');
+  } catch (error) {
+    console.error('Error saving translation:', error);
+    
+    // Show error state
+    const saveButton = document.getElementById('saveButton');
+    saveButton.textContent = 'Error Saving';
+    
+    // Reset button after 2 seconds
+    setTimeout(() => {
+      saveButton.textContent = 'Save Translation';
+      saveButton.disabled = false;
+    }, 2000);
+  }
+}
+
+// Simple language detection (very basic implementation)
+function detectLanguage(text) {
+  // This is a very simplified detection - in reality, we already know
+  // the language from the translation process, but this is a fallback
+  const spanishPattern = /[áéíóúüñ¿¡]/i;
+  return spanishPattern.test(text) ? 'Spanish' : 'English';
+}
+
+// Initialize the extension
+function initializeExtension() {
+  console.log('Initializing extension...');
+  
+  // Get DOM elements
+  inputText = document.getElementById('inputText');
+  outputText = document.getElementById('outputText');
+  const saveButton = document.getElementById('saveButton');
+  
+  if (!inputText || !outputText || !saveButton) {
+    console.error('Could not find required DOM elements:', { 
+      inputText: !!inputText, 
+      outputText: !!outputText,
+      saveButton: !!saveButton
+    });
+    return;
+  }
+  
+  console.log('DOM elements found');
+  
+  // Event listener for input changes
+  inputText.addEventListener('input', (e) => {
+    console.log('Input changed:', e.target.value);
+    debouncedTranslate(e.target.value);
+  });
+  
+  // Event listener for save button
+  saveButton.addEventListener('click', () => {
+    const originalText = inputText.value.trim();
+    const translatedText = outputText.value.trim();
+    
+    if (originalText && translatedText && translatedText !== 'Translating...' && 
+        !translatedText.startsWith('Error:')) {
+      console.log('Saving translation...');
+      saveTranslation(originalText, translatedText);
+    } else {
+      console.log('Cannot save: No valid translation available');
+      alert('Please wait for translation to complete before saving.');
+    }
+  });
+  
+  // Initial translation of default text
+  if (inputText.value) {
+    console.log('Translating initial text:', inputText.value);
+    translateText(inputText.value);
+  }
+}
+
+// Wait for DOM to be fully loaded
+document.addEventListener('DOMContentLoaded', initializeExtension);

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Icon Generator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    canvas {
+      border: 1px solid #ddd;
+      margin: 20px 0;
+    }
+    .instructions {
+      background-color: #f5f5f5;
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 20px;
+    }
+    button {
+      padding: 10px 15px;
+      background-color: #4285F4;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-right: 10px;
+    }
+    button:hover {
+      background-color: #3367D6;
+    }
+    #dataUrl {
+      word-break: break-all;
+      background-color: #f5f5f5;
+      padding: 10px;
+      border-radius: 4px;
+      margin-top: 10px;
+      display: none;
+    }
+    .icon-preview {
+      margin: 20px 0;
+    }
+    .icon-preview img {
+      border: 1px solid #ddd;
+      margin-right: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Icon Generator for Quick Translator</h1>
+  
+  <div class="instructions">
+    <h2>Instructions:</h2>
+    <ol>
+      <li>Click the "Generate Icon" button below</li>
+      <li>Right-click on the generated icon and select "Save image as..."</li>
+      <li>Save it as "icon.png" in your extension folder</li>
+    </ol>
+  </div>
+  
+  <canvas id="iconCanvas" width="128" height="128"></canvas>
+  <br>
+  <button id="generateBtn">Generate Icon</button>
+  <button id="downloadBtn" style="display:none;">Download Icon</button>
+  
+  <div class="icon-preview" id="iconPreview" style="display:none;">
+    <h3>Icon Preview:</h3>
+    <img id="iconImg" alt="Icon Preview" width="128" height="128">
+  </div>
+  
+  <script>
+    const canvas = document.getElementById('iconCanvas');
+    const ctx = canvas.getContext('2d');
+    const generateBtn = document.getElementById('generateBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const iconPreview = document.getElementById('iconPreview');
+    const iconImg = document.getElementById('iconImg');
+    
+    function drawIcon() {
+      const size = 128;
+      
+      // Clear canvas
+      ctx.clearRect(0, 0, size, size);
+      
+      // Background
+      ctx.fillStyle = '#4285F4'; // Google blue
+      ctx.fillRect(0, 0, size, size);
+      
+      // Border
+      ctx.strokeStyle = '#FFFFFF';
+      ctx.lineWidth = Math.max(1, size / 16);
+      ctx.strokeRect(0, 0, size, size);
+      
+      // "T" letter for translator
+      ctx.fillStyle = '#FFFFFF';
+      
+      // Horizontal bar of T
+      ctx.fillRect(size * 0.2, size * 0.2, size * 0.6, size * 0.15);
+      
+      // Vertical bar of T
+      ctx.fillRect(size * 0.4, size * 0.2, size * 0.2, size * 0.6);
+      
+      // Draw a small arrow at the bottom
+      ctx.beginPath();
+      ctx.moveTo(size * 0.3, size * 0.75);
+      ctx.lineTo(size * 0.5, size * 0.85);
+      ctx.lineTo(size * 0.7, size * 0.75);
+      ctx.fill();
+      
+      // Convert to data URL
+      const dataUrl = canvas.toDataURL('image/png');
+      
+      // Show preview
+      iconImg.src = dataUrl;
+      iconPreview.style.display = 'block';
+      
+      // Create download link
+      downloadBtn.style.display = 'inline-block';
+      downloadBtn.onclick = function() {
+        const link = document.createElement('a');
+        link.download = 'icon.png';
+        link.href = dataUrl;
+        link.click();
+      };
+    }
+    
+    // Generate icon when button is clicked
+    generateBtn.addEventListener('click', drawIcon);
+    
+    // Generate icon on page load
+    drawIcon();
+  </script>
+</body>
+</html>

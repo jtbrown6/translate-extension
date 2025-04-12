@@ -1,0 +1,20 @@
+{
+  "manifest_version": 3,
+  "name": "Quick Translator",
+  "version": "1.0",
+  "description": "Translate text between English and Spanish using Google Gemini API",
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": "icon.png"
+  },
+  "permissions": [
+    "activeTab"
+  ],
+  "host_permissions": [
+    "https://generativelanguage.googleapis.com/*",
+    "http://192.168.1.214:3005/*"
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  }
+}

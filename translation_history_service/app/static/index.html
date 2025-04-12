@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Translation History</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-language"></i> Translation History</h1>
+            <div class="controls">
+                <div class="search-container">
+                    <input type="text" id="searchInput" placeholder="Search translations...">
+                    <button id="searchBtn"><i class="fas fa-search"></i></button>
+                </div>
+                <div class="filter-container">
+                    <select id="filterSelect">
+                        <option value="all">All Translations</option>
+                        <option value="en-es">English to Spanish</option>
+                        <option value="es-en">Spanish to English</option>
+                    </select>
+                    <select id="sortSelect">
+                        <option value="newest">Newest First</option>
+                        <option value="oldest">Oldest First</option>
+                    </select>
+                </div>
+            </div>
+        </header>
+        
+        <main>
+            <div id="stats" class="stats-container">
+                <div class="stat-box">
+                    <h3>Total Translations</h3>
+                    <p id="totalCount">0</p>
+                </div>
+                <div class="stat-box">
+                    <h3>English to Spanish</h3>
+                    <p id="enToEsCount">0</p>
+                </div>
+                <div class="stat-box">
+                    <h3>Spanish to English</h3>
+                    <p id="esToEnCount">0</p>
+                </div>
+            </div>
+
+            <div class="time-filters">
+                <button class="time-filter active" data-filter="all">All Time</button>
+                <button class="time-filter" data-filter="today">Today</button>
+                <button class="time-filter" data-filter="week">This Week</button>
+                <button class="time-filter" data-filter="month">This Month</button>
+            </div>
+            
+            <div id="translationsList" class="translations-container">
+                <!-- Translations will be loaded here -->
+                <div class="loading">Loading translations...</div>
+            </div>
+            
+            <div id="noResults" class="no-results" style="display: none;">
+                <p>No translations found.</p>
+            </div>
+        </main>
+        
+        <footer>
+            <p>Translation History Service | <a href="#" id="clearHistoryBtn">Clear History</a></p>
+        </footer>
+    </div>
+
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <h3>Confirm Deletion</h3>
+            <p>Are you sure you want to delete all translation history? This action cannot be undone.</p>
+            <div class="modal-buttons">
+                <button id="cancelDelete">Cancel</button>
+                <button id="confirmDelete" class="danger">Delete All</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Quick Translator</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <h2>Quick Translator</h2>
+    <div class="translation-box">
+      <textarea id="inputText" placeholder="Enter text to translate..." rows="4">Hello, world.</textarea>
+    </div>
+    <div class="translation-box">
+      <textarea id="outputText" placeholder="Translation will appear here..." rows="4" readonly></textarea>
+    </div>
+    <div class="actions">
+      <button id="saveButton" class="save-btn">Save Translation</button>
+    </div>
+    <div class="footer">
+      <p class="info">English ↔ Spanish</p>
+      <p class="view-history"><a href="http://192.168.1.214:3005" target="_blank">View History</a></p>
+    </div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
